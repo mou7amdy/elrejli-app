@@ -70,7 +70,7 @@ function Pulse({ color }) {
 function LoginScreen({ onCodeSent, onVerify, step, email, setEmail, error }) {
   const [code, setCode] = useState("");
   return (
-    <div style={{ minHeight: "100%", display: "flex", flexDirection: "column", justifyContent: "center", padding: "32px 24px", background: `radial-gradient(circle at 50% 0%, ${COLORS.bgGradTop}, ${COLORS.bg} 60%)` }}>
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", justifyContent: "center", padding: "32px 24px", background: `radial-gradient(circle at 50% 0%, ${COLORS.bgGradTop}, ${COLORS.bg} 60%)` }}>
       <div style={{ textAlign: "center", marginBottom: 40 }}>
         <div style={{ fontFamily: "Cairo, sans-serif", fontWeight: 900, fontSize: 42, color: COLORS.gold }}>الرجلي</div>
         <div style={{ fontFamily: "Tajawal, sans-serif", color: COLORS.textMuted, fontSize: 14, marginTop: 6 }}>شنو خبار الليلة؟</div>
@@ -105,7 +105,7 @@ function LoginScreen({ onCodeSent, onVerify, step, email, setEmail, error }) {
 
 function PendingScreen({ onSignOut }) {
   return (
-    <div style={{ minHeight: "100%", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 32, textAlign: "center", background: `radial-gradient(circle at 50% 0%, ${COLORS.bgGradTop}, ${COLORS.bg} 60%)` }}>
+    <div style={{ minHeight: "100vh", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 32, textAlign: "center", background: `radial-gradient(circle at 50% 0%, ${COLORS.bgGradTop}, ${COLORS.bg} 60%)` }}>
       <div style={{ width: 84, height: 84, borderRadius: "50%", background: COLORS.surface, border: `1px solid ${COLORS.border}`, display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 24 }}>
         <Clock size={34} color={COLORS.gold} strokeWidth={1.8} />
       </div>
@@ -120,7 +120,7 @@ function PendingScreen({ onSignOut }) {
 
 // ---------- Home ----------
 function CategoryCard({ catKey, label, color, sub, hasActivity, onOpen }) {
-  const Icon = ICONS[catKey];
+  const Icon = ICONS[catKey] || Moon;
   const locked = !sub || sub === "none";
   const pending = sub === "pending";
   return (
@@ -149,7 +149,7 @@ function CategoryCard({ catKey, label, color, sub, hasActivity, onOpen }) {
 
 function HomeScreen({ categories, subsMap, activityMap, onOpen, onOpenNotifs, unreadCount, onJoin, isAdmin, onOpenAdmin, onSignOut }) {
   return (
-    <div style={{ minHeight: "100%", background: COLORS.bg, paddingBottom: 24 }}>
+    <div style={{ minHeight: "100vh", background: COLORS.bg, paddingBottom: 24 }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "20px 20px 8px" }}>
         <div>
           <div style={{ fontFamily: "Cairo, sans-serif", fontWeight: 900, fontSize: 26, color: COLORS.gold }}>الرجلي</div>
@@ -235,7 +235,7 @@ function ComposeSheet({ label, color, onClose, onPost }) {
   const [text, setText] = useState("");
   const [loc, setLoc] = useState("");
   return (
-    <div style={{ position: "absolute", inset: 0, background: "#000000aa", display: "flex", alignItems: "flex-end", zIndex: 20 }} onClick={onClose}>
+    <div style={{ position: "fixed", inset: 0, background: "#000000aa", display: "flex", alignItems: "flex-end", zIndex: 50 }} onClick={onClose}>
       <div onClick={e => e.stopPropagation()} style={{ width: "100%", background: COLORS.surface, borderRadius: "22px 22px 0 0", padding: 20, display: "flex", flexDirection: "column", gap: 12, border: `1px solid ${COLORS.border}`, borderBottom: "none" }}>
         <div style={{ width: 36, height: 4, borderRadius: 4, background: COLORS.border, margin: "0 auto 4px" }} />
         <div style={{ fontFamily: "Cairo, sans-serif", fontWeight: 800, fontSize: 16, color: COLORS.textPrimary }}>نشر في {label}</div>
@@ -252,11 +252,11 @@ function ComposeSheet({ label, color, onClose, onPost }) {
 }
 
 function CategoryScreen({ cat, posts, onBack, onAddPost, onAddComment, onQuickAction }) {
-  const Icon = ICONS[cat.key];
+  const Icon = ICONS[cat.key] || Moon;
   const [compose, setCompose] = useState(false);
 
   return (
-    <div style={{ minHeight: "100%", background: COLORS.bg, display: "flex", flexDirection: "column", position: "relative" }}>
+    <div style={{ minHeight: "100vh", background: COLORS.bg, display: "flex", flexDirection: "column", position: "relative" }}>
       <div style={{ padding: "18px 18px 14px", display: "flex", alignItems: "center", gap: 12, borderBottom: `1px solid ${COLORS.border}`, background: `linear-gradient(180deg, ${cat.color}14, transparent)` }}>
         <button onClick={onBack} style={{ background: "none", border: "none", cursor: "pointer", padding: 6 }}><ArrowRight size={20} color={COLORS.textPrimary} /></button>
         <div style={{ width: 40, height: 40, borderRadius: 12, background: `${cat.color}22`, display: "flex", alignItems: "center", justifyContent: "center" }}><Icon size={20} color={cat.color} /></div>
@@ -291,7 +291,7 @@ function CategoryScreen({ cat, posts, onBack, onAddPost, onAddComment, onQuickAc
         {posts.map(p => <PostCard key={p.id} post={p} color={cat.color} onAddComment={onAddComment} />)}
       </div>
 
-      <button onClick={() => setCompose(true)} style={{ position: "absolute", bottom: 20, left: 20, width: 54, height: 54, borderRadius: "50%", background: cat.color, border: "none", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", boxShadow: `0 8px 24px ${cat.color}55` }}>
+      <button onClick={() => setCompose(true)} style={{ position: "fixed", bottom: 20, left: 20, width: 54, height: 54, borderRadius: "50%", background: cat.color, border: "none", display: "flex", alignItems: "center", justifyContent: "center", cursor: "pointer", boxShadow: `0 8px 24px ${cat.color}55`, zIndex: 10 }}>
         <Plus size={24} color="#15121f" strokeWidth={2.5} />
       </button>
 
@@ -304,8 +304,8 @@ function CategoryScreen({ cat, posts, onBack, onAddPost, onAddComment, onQuickAc
 function NotifsPanel({ notifs, categories, onClose }) {
   const colorOf = (k) => categories.find(c => c.key === k)?.color || COLORS.gold;
   return (
-    <div style={{ position: "absolute", inset: 0, background: "#000000aa", zIndex: 30 }} onClick={onClose}>
-      <div onClick={e => e.stopPropagation()} style={{ position: "absolute", top: 0, left: 0, right: 0, background: COLORS.surface, borderRadius: "0 0 22px 22px", padding: 18, maxHeight: "70%", overflowY: "auto", border: `1px solid ${COLORS.border}`, borderTop: "none" }}>
+    <div style={{ position: "fixed", inset: 0, background: "#000000aa", zIndex: 60 }} onClick={onClose}>
+      <div onClick={e => e.stopPropagation()} style={{ position: "absolute", top: 0, left: 0, right: 0, background: COLORS.surface, borderRadius: "0 0 22px 22px", padding: 18, maxHeight: "70vh", overflowY: "auto", border: `1px solid ${COLORS.border}`, borderTop: "none" }}>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 12 }}>
           <div style={{ fontFamily: "Cairo, sans-serif", fontWeight: 800, fontSize: 16, color: COLORS.textPrimary }}>التنبيهات</div>
           <button onClick={onClose} style={{ background: "none", border: "none", cursor: "pointer" }}><X size={20} color={COLORS.textMuted} /></button>
@@ -313,7 +313,7 @@ function NotifsPanel({ notifs, categories, onClose }) {
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
           {notifs.length === 0 && <div style={{ fontFamily: "Tajawal, sans-serif", color: COLORS.textMuted, fontSize: 13, textAlign: "center", padding: 20 }}>ماكان حتى تنبيه توا</div>}
           {notifs.map(n => {
-            const Icon = ICONS[n.category_key];
+            const Icon = ICONS[n.category_key] || Moon;
             const color = colorOf(n.category_key);
             return (
               <div key={n.id} style={{ display: "flex", alignItems: "center", gap: 10, padding: "10px 8px", borderRadius: 12, background: n.read ? "transparent" : `${color}12` }}>
@@ -333,7 +333,7 @@ function NotifsPanel({ notifs, categories, onClose }) {
 }
 
 // ---------- Admin ----------
-function AdminScreen({ onBack, refreshKey }) {
+function AdminScreen({ onBack }) {
   const [pendingUsers, setPendingUsers] = useState([]);
   const [pendingSubs, setPendingSubs] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -349,7 +349,7 @@ function AdminScreen({ onBack, refreshKey }) {
     setLoading(false);
   }, []);
 
-  useEffect(() => { load(); }, [load, refreshKey]);
+  useEffect(() => { load(); }, [load]);
 
   const approveUser = async (id) => {
     await supabase.from("profiles").update({ status: "approved" }).eq("id", id);
@@ -369,7 +369,7 @@ function AdminScreen({ onBack, refreshKey }) {
   };
 
   return (
-    <div style={{ minHeight: "100%", background: COLORS.bg, padding: "18px" }}>
+    <div style={{ minHeight: "100vh", background: COLORS.bg, padding: "18px" }}>
       <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 18 }}>
         <button onClick={onBack} style={{ background: "none", border: "none", cursor: "pointer" }}><ArrowRight size={20} color={COLORS.textPrimary} /></button>
         <div style={{ fontFamily: "Cairo, sans-serif", fontWeight: 800, fontSize: 18, color: COLORS.gold }}>لوحة الأدمن</div>
@@ -494,14 +494,19 @@ export default function App() {
   const sendCode = async (em) => {
     setAuthError("");
     const { error } = await supabase.auth.signInWithOtp({ email: em });
-    if (error) setAuthError(error.message);
-    else setAuthStep("code");
+    if (error) {
+      setAuthError(error.message || JSON.stringify(error));
+    } else {
+      setAuthStep("code");
+    }
   };
+
   const verifyCode = async (em, code) => {
     setAuthError("");
     const { error } = await supabase.auth.verifyOtp({ email: em, token: code, type: "email" });
-    if (error) setAuthError(error.message);
+    if (error) setAuthError(error.message || JSON.stringify(error));
   };
+
   const signOut = async () => { await supabase.auth.signOut(); setProfile(null); };
 
   const requestJoin = async (catKey) => {
@@ -521,8 +526,19 @@ export default function App() {
       .insert({ category_key: cat, user_id: session.user.id, type: "post", text, location: loc || null })
       .select().single();
     if (!error) {
-      await supabase.rpc("notify_category", { p_category_key: cat, p_text: `${profile.display_name}: ${text}`, p_post_id: data.id });
+      await supabase.rpc("notify_category", { p_category_key: cat, p_text: `${profile?.display_name || 'عضو'}: ${text}`, p_post_id: data.id });
       loadPosts(cat);
+    }
+  };
+
+  const addComment = async (postId, text) => {
+    const { error } = await supabase.from("comments").insert({
+      post_id: postId,
+      user_id: session.user.id,
+      text
+    });
+    if (!error) {
+      loadPosts(activeCatKey);
     }
   };
 
@@ -532,62 +548,72 @@ export default function App() {
       .insert({ category_key: cat, user_id: session.user.id, type, text: label })
       .select().single();
     if (!error) {
-      await supabase.rpc("notify_category", { p_category_key: cat, p_text: `${profile.display_name}: ${label}`, p_post_id: data.id });
+      await supabase.rpc("notify_category", { p_category_key: cat, p_text: `${profile?.display_name || 'عضو'}: ${label}`, p_post_id: data.id });
       loadPosts(cat);
     }
   };
 
-  const addComment = async (postId, text) => {
-    await supabase.from("comments").insert({ post_id: postId, user_id: session.user.id, text });
-    loadPosts(activeCatKey);
-  };
-
-  const markNotifsRead = async () => {
-    const unread = notifs.filter(n => !n.read).map(n => n.id);
-    if (unread.length) {
-      await supabase.from("notifications").update({ read: true }).in("id", unread);
-      loadNotifs();
-    }
-  };
-
-  useEffect(() => { document.body.style.background = COLORS.bg; }, []);
-
-  // ----- Render -----
-  let content;
+  // ----- Render logic -----
   if (!session) {
-    content = <LoginScreen step={authStep} email={email} setEmail={setEmail} onCodeSent={sendCode} onVerify={verifyCode} error={authError} />;
-  } else if (!profile) {
-    content = <div style={{ minHeight: "100%", display: "flex", alignItems: "center", justifyContent: "center", color: COLORS.textMuted, fontFamily: "Tajawal, sans-serif" }}>...جاري التحميل</div>;
-  } else if (profile.status !== "approved") {
-    content = <PendingScreen onSignOut={signOut} />;
-  } else if (screen === "admin") {
-    content = <AdminScreen onBack={() => setScreen("home")} />;
-  } else if (screen === "category" && activeCatKey) {
-    const cat = categories.find(c => c.key === activeCatKey);
-    content = (
-      <CategoryScreen cat={cat} posts={posts[activeCatKey] || []}
-        onBack={() => setScreen("home")} onAddPost={addPost}
-        onAddComment={addComment} onQuickAction={quickAction} />
-    );
-  } else {
-    const activityMap = {};
-    categories.forEach(c => { activityMap[c.key] = (posts[c.key] || []).length > 0; });
-    content = (
-      <HomeScreen categories={categories} subsMap={subsMap} activityMap={activityMap}
-        onOpen={openCategory} onOpenNotifs={() => { setShowNotifs(true); markNotifsRead(); }}
-        unreadCount={notifs.filter(n => !n.read).length} onJoin={requestJoin}
-        isAdmin={profile.is_admin} onOpenAdmin={() => setScreen("admin")} onSignOut={signOut} />
+    return (
+      <LoginScreen
+        onCodeSent={sendCode}
+        onVerify={verifyCode}
+        step={authStep}
+        email={email}
+        setEmail={setEmail}
+        error={authError}
+      />
     );
   }
 
+  if (profile && profile.status === "pending") {
+    return <PendingScreen onSignOut={signOut} />;
+  }
+
+  const activeCategory = categories.find(c => c.key === activeCatKey);
+  const unreadNotifsCount = notifs.filter(n => !n.read).length;
+  const activityMap = {};
+
   return (
-    <div dir="rtl" style={{ width: "100%", maxWidth: 420, height: 780, margin: "0 auto", position: "relative", background: COLORS.bg, borderRadius: 28, overflow: "hidden", boxShadow: "0 20px 60px #00000066", border: `1px solid ${COLORS.border}` }}>
-      <style>{`
-        @keyframes rajli-pulse { 0% { transform: scale(1); opacity: .7; } 70% { transform: scale(2.4); opacity: 0; } 100% { transform: scale(2.4); opacity: 0; } }
-        * { box-sizing: border-box; } ::-webkit-scrollbar { width: 0px; }
-      `}</style>
-      <div style={{ height: "100%", overflowY: "auto", position: "relative" }}>{content}</div>
-      {showNotifs && <NotifsPanel notifs={notifs} categories={categories} onClose={() => setShowNotifs(false)} />}
+    <div style={{ maxWidth: 480, margin: "0 auto", background: COLORS.bg, minHeight: "100vh", position: "relative" }}>
+      {screen === "home" && (
+        <HomeScreen
+          categories={categories}
+          subsMap={subsMap}
+          activityMap={activityMap}
+          onOpen={openCategory}
+          onOpenNotifs={() => setShowNotifs(true)}
+          unreadCount={unreadNotifsCount}
+          onJoin={requestJoin}
+          isAdmin={profile?.role === "admin"}
+          onOpenAdmin={() => setScreen("admin")}
+          onSignOut={signOut}
+        />
+      )}
+
+      {screen === "category" && activeCategory && (
+        <CategoryScreen
+          cat={activeCategory}
+          posts={posts[activeCatKey] || []}
+          onBack={() => setScreen("home")}
+          onAddPost={addPost}
+          onAddComment={addComment}
+          onQuickAction={quickAction}
+        />
+      )}
+
+      {screen === "admin" && (
+        <AdminScreen onBack={() => setScreen("home")} />
+      )}
+
+      {showNotifs && (
+        <NotifsPanel
+          notifs={notifs}
+          categories={categories}
+          onClose={() => setShowNotifs(false)}
+        />
+      )}
     </div>
   );
 }
