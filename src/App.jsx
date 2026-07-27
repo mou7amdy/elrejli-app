@@ -542,18 +542,18 @@ export default function App() {
     }
   };
 
-  const quickAction = async (type, label) => {
+  const quickAction = async (type, text) => {
     const cat = activeCatKey;
     const { data, error } = await supabase.from("posts")
-      .insert({ category_key: cat, user_id: session.user.id, type, text: label })
+      .insert({ category_key: cat, user_id: session.user.id, type, text })
       .select().single();
     if (!error) {
-      await supabase.rpc("notify_category", { p_category_key: cat, p_text: `${profile?.display_name || 'عضو'}: ${label}`, p_post_id: data.id });
+      await supabase.rpc("notify_category", { p_category_key: cat, p_text: `${profile?.display_name || 'عضو'}: ${text}`, p_post_id: data.id });
       loadPosts(cat);
     }
   };
 
-  // ----- Render logic -----
+  // ----- Render Flow -----
   if (!session) {
     return (
       <LoginScreen
@@ -567,13 +567,15 @@ export default function App() {
     );
   }
 
-  if (profile && profile.status === "pending") {
+  if (profile?.status !== "approved") {
     return <PendingScreen onSignOut={signOut} />;
   }
 
-  const activeCategory = categories.find(c => c.key === activeCatKey);
-  const unreadNotifsCount = notifs.filter(n => !n.read).length;
+  const unreadCount = notifs.filter(n => !n.read).length;
   const activityMap = {};
+  categories.forEach(c => {
+    activityMap[c.key] = (posts[c.key]?.length || 0) > 0;
+  });
 
   return (
     <div style={{ maxWidth: 480, margin: "0 auto", background: COLORS.bg, minHeight: "100vh", position: "relative" }}>
@@ -584,17 +586,17 @@ export default function App() {
           activityMap={activityMap}
           onOpen={openCategory}
           onOpenNotifs={() => setShowNotifs(true)}
-          unreadCount={unreadNotifsCount}
+          unreadCount={unreadCount}
           onJoin={requestJoin}
-          isAdmin={profile?.role === "admin"}
+          isAdmin={profile?.role === "admin" || profile?.is_admin}
           onOpenAdmin={() => setScreen("admin")}
           onSignOut={signOut}
         />
       )}
 
-      {screen === "category" && activeCategory && (
+      {screen === "category" && activeCatKey && (
         <CategoryScreen
-          cat={activeCategory}
+          cat={categories.find(c => c.key === activeCatKey) || { key: activeCatKey, label: activeCatKey, color: COLORS.gold }}
           posts={posts[activeCatKey] || []}
           onBack={() => setScreen("home")}
           onAddPost={addPost}
@@ -603,9 +605,7 @@ export default function App() {
         />
       )}
 
-      {screen === "admin" && (
-        <AdminScreen onBack={() => setScreen("home")} />
-      )}
+      {screen === "admin" && <AdminScreen onBack={() => setScreen("home")} />}
 
       {showNotifs && (
         <NotifsPanel
